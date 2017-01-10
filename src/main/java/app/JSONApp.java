@@ -26,6 +26,8 @@ public class JSONApp {
         BasicStudent basicStudent = new BasicStudent("Andrii", "Rodionov", 2);
         print(basicStudent.toJsonObject()); // {'name': 'Andrii', 'surname': 'Rodionov', 'year': 2}
 
+        sessionResult();
+
     }
 
     private static void print(Json json) {
@@ -33,8 +35,21 @@ public class JSONApp {
     }
 
     public static JsonObject sessionResult() {
-        JsonObject jsonObject = null;
-        // ToDo
+        JsonObject jsonObject = new JsonObject(new JsonPair("name", new JsonString("Andrii")),
+                new JsonPair("surname", new JsonString("Rodionov")),
+                new JsonPair("year", new JsonNumber(2)),
+                new JsonPair("exams", new JsonArray(
+                        new JsonObject(new JsonPair("course", new JsonString("OOP")),
+                                new JsonPair("mark", new JsonNumber(3)),
+                                new JsonPair("passed", new JsonBoolean(true))),
+                        new JsonObject(new JsonPair("course", new JsonString("English")),
+                                new JsonPair("mark", new JsonNumber(5)),
+                                new JsonPair("passed", new JsonBoolean(true))),
+                        new JsonObject(new JsonPair("course", new JsonString("Math")),
+                                new JsonPair("mark", new JsonNumber(2)),
+                                new JsonPair("passed", new JsonBoolean(false)))
+                        ))
+        );
         return jsonObject;
     }
 }

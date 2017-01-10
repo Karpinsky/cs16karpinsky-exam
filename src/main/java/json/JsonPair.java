@@ -8,4 +8,10 @@ public class JsonPair extends Tuple<String, Json> {
     public JsonPair(String name, Json value) {
         super(name, value);
     }
+
+    @Override
+    public String toJson()
+    {
+        return this.key + ": " + this.value.toJson();
+    }
 }

@@ -12,6 +12,7 @@ public class BasicStudent implements Jsonable {
     protected Integer year;
 
     public BasicStudent() {
+
     }
 
     public BasicStudent(String name, String surname, Integer year) {
@@ -22,7 +23,9 @@ public class BasicStudent implements Jsonable {
 
     @Override
     public JsonObject toJsonObject() {
-        // ToDo
-        return null;
+        return new JsonObject(new JsonPair("name", new JsonString(this.name)),
+                new JsonPair("surname", new JsonString(this.surname)),
+                new JsonPair("year", new JsonNumber(this.year))
+        );
     }
 }
