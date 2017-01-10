@@ -8,14 +8,14 @@ import java.util.*;
  */
 public class JsonObject extends Json {
 
-    private java.util.ArrayList<JsonPair> jsonPairs;
+    private HashMap<String, JsonPair> jsonPairs;
 
     public JsonObject(JsonPair... jsonPairs) {
-        this.jsonPairs = new ArrayList<>(3);
-        // I don't understand why ArrayList can't just accept array as parameter.
+        this.jsonPairs = new HashMap<>(jsonPairs.length);
+
         for (JsonPair jsonPair : jsonPairs)
         {
-            this.jsonPairs.add(jsonPair);
+            this.jsonPairs.put(jsonPair.key, jsonPair);
         }
     }
 
@@ -24,11 +24,11 @@ public class JsonObject extends Json {
         StringBuilder jsonStr = new StringBuilder(10 * this.jsonPairs.size());
         jsonStr.append("{");
 
-        Iterator<JsonPair> pairsIterator = this.jsonPairs.iterator();
+        Iterator<String> pairsIterator = this.jsonPairs.keySet().iterator();
         while (pairsIterator.hasNext())
         {
-            JsonPair jsonPair = pairsIterator.next();
-            jsonStr.append(jsonPair.toJson());
+            String jsonPair = pairsIterator.next();
+            jsonStr.append(this.jsonPairs.get(jsonPair).toJson());
             if (pairsIterator.hasNext())
             {
                 jsonStr.append(", ");
@@ -42,9 +42,10 @@ public class JsonObject extends Json {
     public void add(JsonPair jsonPair) {
         if (this.contains(jsonPair))
         {
-            this.jsonPairs.remove((JsonPair) this.findPair(jsonPair.key));
+            JsonPair jsonPairToRemove = (JsonPair) this.findPair(jsonPair.key);
+            this.jsonPairs.remove(jsonPairToRemove.key, jsonPairToRemove);
         }
-        this.jsonPairs.add(jsonPair);
+        this.jsonPairs.put(jsonPair.key, jsonPair);
     }
 
     public boolean contains(JsonPair jsonPair)
@@ -53,29 +54,20 @@ public class JsonObject extends Json {
     }
 
     public Json find(String name) {
-        Iterator<JsonPair> jsonPairIterator = this.jsonPairs.iterator();
+        JsonPair jsonPair = ((JsonPair)this.findPair(name));
 
-        while (jsonPairIterator.hasNext())
-        {
-            JsonPair jsonPair = jsonPairIterator.next();
-            if (jsonPair.key.equals(name))
-            {
-                return jsonPair.value;
-            }
-        }
-
-        return null;
+        return jsonPair != null ? jsonPair.value : null;
     }
 
     private Json findPair(String name) {
-        Iterator<JsonPair> jsonPairIterator = this.jsonPairs.iterator();
+        Iterator<String> jsonPairIterator = this.jsonPairs.keySet().iterator();
 
         while (jsonPairIterator.hasNext())
         {
-            JsonPair jsonPair = jsonPairIterator.next();
-            if (jsonPair.key.equals(name))
+            String jsonPair = jsonPairIterator.next();
+            if (jsonPair.equals(name))
             {
-                return jsonPair;
+                return this.jsonPairs.get(jsonPair);
             }
         }
 
